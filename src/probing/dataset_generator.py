@@ -9,16 +9,20 @@ class ProbingDatasetGenerator:
         self.model = self.model.to(device)
         self.device = device
     
-    def _generate_batch(self, batch):
+    def _generate_batch(self, texts):
         """
         Generates model outputs for a batch of inputs.
         
         Args:
-            batch (list): A list of input data formatted for the tokenizer.
+            texts (list): A list of input data formatted for the tokenizer.
 
         Returns:
             outputs: The model outputs after processing the batch.
         """
+        batch = [
+            [{"role": "user", "content": text}] for text in texts
+        ]
+
         encoded = self.tokenizer.apply_chat_template(
             batch,
             add_generation_prompt=True,
@@ -38,18 +42,18 @@ class ProbingDatasetGenerator:
             )
         return outputs
 
-    def get_activations(self, batch):
+    def get_activations(self, texts):
         """
         Retrieves hidden states.
         
         Args:
-            batch (list): A list of input data formatted for the tokenizer.
+            texts (list): A list of input data formatted for the tokenizer.
 
         Returns:
             hidden_states: The hidden states.
         """
 
-        outputs = self._generate_batch(batch)
+        outputs = self._generate_batch(texts)
         return outputs.hidden_states
 
     def store_activations(self, hidden_states, label, filepath):
