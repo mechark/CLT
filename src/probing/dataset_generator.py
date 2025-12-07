@@ -1,4 +1,5 @@
 from transformers import AutoTokenizer, AutoModelForCausalLM
+import os
 
 class ProbingDatasetGenerator:
     """A class to generate model outputs for probing datasets."""
@@ -8,11 +9,11 @@ class ProbingDatasetGenerator:
 
         self.model = self.model.to(device)
         self.device = device
-    
+
     def _generate_batch(self, texts):
         """
         Generates model outputs for a batch of inputs.
-        
+
         Args:
             texts (list): A list of input data formatted for the tokenizer.
 
@@ -45,7 +46,7 @@ class ProbingDatasetGenerator:
     def get_activations(self, texts):
         """
         Retrieves hidden states.
-        
+
         Args:
             texts (list): A list of input data formatted for the tokenizer.
 
@@ -59,7 +60,7 @@ class ProbingDatasetGenerator:
     def store_activations(self, hidden_states, label, filepath):
         """
         Stores hidden states from a specific layer to a file.
-        
+
         Args:
             layer_idx (int): The index of the layer from which to extract hidden states.
             batch (list): A list of input data formatted for the tokenizer.
