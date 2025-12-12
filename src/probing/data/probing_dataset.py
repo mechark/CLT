@@ -37,14 +37,14 @@ class KaggleProbingDatasetLoader(DatasetLoader):
         self.dataset_folder = path
         return path
 
-    def load_dataset(self) -> pd.DataFrame:
+    def load_dataset(self, dataset_name) -> pd.DataFrame:
         """
         Loads the dataset from the specified filepath.
         
         Returns:
             data: The loaded dataset as a list of examples.
         """
-        path = self.dataset_folder + "/data_set_4.csv"
+        path = self.dataset_folder + '\\' + dataset_name
         data = pd.read_csv(path)
         return data
     
