@@ -1,7 +1,7 @@
 import kagglehub
 from abc import ABC, abstractmethod
 import pandas as pd
-from datasets import load_dataset
+from datasets import load_dataset, load_from_disk
 
 class DatasetLoader(ABC):
     
@@ -55,8 +55,11 @@ class HuggingFaceDatasetLoader(DatasetLoader):
 
     def download_dataset(self, dataset_name, split="train") -> str:
         ds = load_dataset(dataset_name, split=split)
-        ds.save_to_disk(f"./{dataset_name}_{split}")
-        self.dataset_folder = f"./{dataset_name}_{split}"
+        ds.save_to_disk(f".datasets/{dataset_name}_{split}")
+        self.dataset_folder = f".datasets/{dataset_name}_{split}"
 
     def load_dataset(self):
         return load_dataset(self.dataset_folder)
+    
+    def load_dataset(self, dataset_folder):
+        return load_from_disk(dataset_folder)

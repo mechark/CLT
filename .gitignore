@@ -9,3 +9,8 @@ wheels/
 # Virtual environments
 .venv
 *.lock
+
+# datasets cache
+datasets/
+
+.env
