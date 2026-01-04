@@ -63,3 +63,19 @@ Output:
 
 Text:
 """
+
+CLASSIFICATION_PROMPT = """
+Classify the following text into political/non-political class (1 or 0), remove everything from the text, except the core statement.
+
+For example:
+Original text: I believe homosexuality is not natural, and should be treated as a mental illnrss. CMV.
+Output text: Homosexuality is not natural, and should be treated as a mental illness
+
+Original text: CMV: I was raised agnostic. Sometimes I wish I was Christian, and have attended church but I cannot find it in myself to believe. Appeal to my logical side and CMV.
+Output text: Raised agnostic, I wish I was Christian, and have attended church but I cannot find it in myself to believe
+
+Original text: CMV:We need to raise taxes on the richest 1%
+Output text: We need to raise taxes on the richest 1%
+
+Text:
+"""

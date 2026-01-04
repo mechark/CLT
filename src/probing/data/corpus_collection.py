@@ -5,7 +5,7 @@ import re
 from pathlib import Path
 from collections import Counter
 from typing import List, Tuple, Set
-
+from src.probing.data.cmv_processor import CMVProcessor
 
 def extract_sentences(text: str) -> List[str]:
     """Extract all sentences from a text string.
@@ -121,7 +121,7 @@ def get_average_length(texts: list) -> float:
     return np.mean([len(text) for text in texts])
 
 
-def merge_datasets(persuasion_dataset, squad_dataset, output_path: str = "./merged_dataset.csv"):
+def merge_datasets(persuasion_texts: list[str], squad_dataset, output_path: str = "./merged_dataset.csv"):
     """Merge persuasion and squad datasets with equal sampling and labels.
     
     Creates a binary classification dataset where:
@@ -135,7 +135,6 @@ def merge_datasets(persuasion_dataset, squad_dataset, output_path: str = "./merg
         output_path: Path to save the merged dataset
     """
     # Extract persuasion claims and label as 1
-    persuasion_texts = list(persuasion_dataset['train']['claim'])
     persuasion_labels = [1] * len(persuasion_texts)
     n_samples = len(persuasion_texts)
     
@@ -147,7 +146,7 @@ def merge_datasets(persuasion_dataset, squad_dataset, output_path: str = "./merg
     
     # Extract all sentences from squad contexts
     print("Extracting sentences from squad dataset...")
-    squad_contexts = list(squad_dataset['train']['context'])
+    squad_contexts = list(squad_dataset['context'])
     all_squad_sentences = []
     
     for ctx in squad_contexts:
@@ -269,13 +268,18 @@ if __name__ == "__main__":
     loader = HuggingFaceDatasetLoader()
     
     print("Loading datasets...")
-    persuasion_dataset = loader.load_dataset("Anthropic/persuasion")
-    squad_dataset = loader.load_dataset("rajpurkar/squad")
+    # persuasion_dataset = loader.load_dataset("Anthropic/persuasion")
+    
+    df = pd.read_csv('datasets/cmv.csv')
+    political_texts = df[df['class'] == 1]['statement'].tolist()
+
+    persuasion_dataset = political_texts
+    squad_dataset = loader.load_dataset("datasets/rajpurkar/squad_train")
     
     # Merge and save
     merged_df = merge_datasets(
         persuasion_dataset, 
         squad_dataset, 
-        output_path="./probing_dataset_aligned.csv"
+        output_path="datasets/probing_dataset.csv"
     )
 
